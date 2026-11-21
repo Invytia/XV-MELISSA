@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melissa XV | Invytia Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul-rey: #1E3A9E;
+            --azul-profundo: #0F1F5C;
+            --azul-noche: #0A1440;
+            --plata: #C9CED8;
+            --plata-clara: #EEF0F5;
+            --plata-fuerte: #8E96A8;
+            --hielo: #F4F6FB;
+        }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--hielo); color: var(--azul-noche); margin: 0; overflow-x: hidden; }
+        .font-name { font-family: 'Playfair Display', serif; }
+        .font-cursive { font-family: 'Great Vibes', cursive; }
+
+        /* Nombre plateado: padding y line-height evitan que se corten las curvas de la tipografía */
+        .silver-text {
+            display: inline-block; padding: .12em .3em .28em; line-height: 1.25;
+            background: linear-gradient(100deg, #9aa2b4 0%, #ffffff 30%, #b9bfcc 50%, #ffffff 70%, #9aa2b4 100%);
+            background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+            animation: shimmer 5s linear infinite;
+        }
+        @keyframes shimmer { from { background-position: 220% 0; } to { background-position: -20% 0; } }
+        .blue-name { display: inline-block; padding: .1em .25em .25em; line-height: 1.3; color: var(--azul-rey); }
+
+        /* ---------- SOBRE LISO ---------- */
+        #envelope-wrapper { perspective: 1200px; position: relative; z-index: 60; width: min(320px, 82vw); }
+        #envelope {
+            width: 100%; aspect-ratio: 320 / 210; position: relative; border-radius: 10px;
+            background: linear-gradient(160deg, #2848b8, var(--azul-rey) 55%, #17307f);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.18);
+        }
+        #flap {
+            position: absolute; top: 0; left: 0; width: 100%; height: 58%;
+            background: linear-gradient(180deg, #3558c8, #2444ad);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            transform-origin: top; transition: transform .9s cubic-bezier(.4,0,.2,1); z-index: 3;
+        }
+        #seal {
+            position: absolute; left: 50%; top: 58%; width: 46px; height: 46px; margin: -23px 0 0 -23px; z-index: 4;
+            border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffffff, #c9ced8 55%, #8e96a8);
+            display: flex; align-items: center; justify-content: center; color: var(--azul-rey);
+            box-shadow: 0 6px 16px rgba(0,0,0,.4); transition: opacity .4s;
+        }
+        .open #flap { transform: rotateX(180deg); }
+        .open #seal { opacity: 0; }
+
+        .invite-head { text-align: center; position: relative; z-index: 10; margin-bottom: 2.2rem; }
+        .line-orn { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .line-orn i { display: block; width: 48px; height: 1px; background: linear-gradient(90deg, transparent, #c9ced8); }
+        .line-orn i:last-child { transform: scaleX(-1); }
+
+        #music-control { position: fixed; bottom: 25px; right: 25px; z-index: 200; padding: 12px 24px; background: white; border-radius: 50px; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,.2); cursor: pointer; display: none; font-size: 10px; font-weight: 800; letter-spacing: 2px; color: var(--azul-rey); border: 1px solid var(--plata); }
+
+        /* ---------- EFECTOS ---------- */
+        .star-shape { clip-path: polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%); }
+        .dust { position: fixed; top: -20px; background: #fff; pointer-events: none; z-index: 30; opacity: 0; animation: fall linear infinite; filter: drop-shadow(0 0 3px rgba(201,206,216,.9)); }
+        @keyframes fall { 0% { transform: translateY(0) rotate(0); opacity: 0; } 10% { opacity: .9; } 85% { opacity: .7; } 100% { transform: translateY(112vh) translateX(40px) rotate(200deg); opacity: 0; } }
+        .twinkle { position: absolute; pointer-events: none; background: #fff; animation: twinkle 2.6s ease-in-out infinite; }
+        @keyframes twinkle { 0%,100% { transform: scale(.3) rotate(0); opacity: .1; } 50% { transform: scale(1) rotate(45deg); opacity: .95; } }
+
+        /* Mariposas: capa fija sobre toda la pantalla, así nunca se cortan */
+        #fx-fly { position: fixed; inset: 0; pointer-events: none; z-index: 35; display: none; overflow: hidden; }
+        .fly { position: absolute; top: 0; left: 0; opacity: 0; will-change: transform; }
+        .fly svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 4px 6px rgba(10,20,64,.35)); }
+        .wing-r { transform-origin: 24px 24px; animation: wingflap .45s ease-in-out infinite alternate; }
+        @keyframes wingflap { from { transform: scaleX(1); } to { transform: scaleX(.25); } }
+        @keyframes flyA { 0% { transform: translate(-15vw,85vh) rotate(25deg); opacity: 0; } 8% { opacity: .95; } 30% { transform: translate(25vw,60vh) rotate(-15deg); } 55% { transform: translate(55vw,48vh) rotate(18deg); } 80% { transform: translate(82vw,20vh) rotate(-10deg); opacity: .95; } 100% { transform: translate(112vw,8vh) rotate(15deg); opacity: 0; } }
+        @keyframes flyB { 0% { transform: translate(112vw,30vh) rotate(-25deg) scaleX(-1); opacity: 0; } 8% { opacity: .95; } 35% { transform: translate(70vw,55vh) rotate(12deg) scaleX(-1); } 65% { transform: translate(35vw,40vh) rotate(-14deg) scaleX(-1); } 100% { transform: translate(-15vw,72vh) rotate(10deg) scaleX(-1); opacity: 0; } }
+        @keyframes flyC { 0% { transform: translate(40vw,112vh) rotate(-8deg); opacity: 0; } 10% { opacity: .95; } 40% { transform: translate(62vw,66vh) rotate(14deg); } 70% { transform: translate(30vw,34vh) rotate(-14deg); } 100% { transform: translate(52vw,-12vh) rotate(8deg); opacity: 0; } }
+
+        .anim-fade-up { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(.25,1,.5,1); }
+        .anim-fade-up.visible { opacity: 1; transform: translateY(0); }
+        #main-content { opacity: 0; transition: opacity 1.5s ease; }
+        .show-content { opacity: 1 !important; }
+
+        .photo-band { height: 70vh; background-size: cover; background-position: center; position: relative; }
+        .photo-band::before, .photo-band::after { content: ""; position: absolute; left: 0; right: 0; height: 90px; z-index: 1; }
+        .photo-band::before { top: 0; background: linear-gradient(to bottom, var(--fade-top, #0F1F5C), transparent); }
+        .photo-band::after { bottom: 0; background: linear-gradient(to top, var(--fade-bot, #0F1F5C), transparent); }
+        .arch { border-radius: 999px 999px 1.5rem 1.5rem; object-fit: cover; box-shadow: 0 0 0 6px white, 0 0 0 7px var(--plata), 0 25px 45px rgba(10,20,64,.35); }
+
+        .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 13px; }
+        .cal .dow { font-size: 10px; font-weight: 600; color: var(--plata-fuerte); padding-bottom: 6px; }
+        .cal .day { padding: 9px 0; border-radius: 999px; }
+        .cal .mark { background: var(--azul-rey); color: white; font-weight: 700; box-shadow: 0 0 0 3px var(--plata); }
+        iframe.map { width: 100%; height: 200px; border: 0; border-radius: 1.5rem; }
+        @media (prefers-reduced-motion: reduce) { .fly, .dust, .twinkle, .silver-text, .wing-r { animation: none; } }
+    </style>
+</head>
+<body class="overflow-hidden">
+
+    <audio id="invite-music" loop><source src="assets/song.mp3" type="audio/mpeg"></audio>
+    <div id="music-control" onclick="toggleMusic()"><span id="music-text">PAUSAR</span></div>
+
+    <!-- Mariposas voladoras (capa fija) -->
+    <svg width="0" height="0" style="position:absolute">
+        <defs>
+            <linearGradient id="wg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#c9ced8"/><stop offset="1" stop-color="#6f8ae0"/>
+            </linearGradient>
+            <symbol id="bfly" viewBox="0 0 48 48" overflow="visible">
+                <g class="wing-r">
+                    <path d="M24 24C22 8 6 2 4 14c-1 8 9 12 20 10z" fill="url(#wg)" stroke="#8E96A8" stroke-width=".7"/>
+                    <path d="M24 25c-10 1-16 8-12 15 4 6 11-2 12-15z" fill="url(#wg)" stroke="#8E96A8" stroke-width=".7" opacity=".92"/>
+                </g>
+                <g transform="translate(48,0) scale(-1,1)"><g class="wing-r">
+                    <path d="M24 24C22 8 6 2 4 14c-1 8 9 12 20 10z" fill="url(#wg)" stroke="#8E96A8" stroke-width=".7"/>
+                    <path d="M24 25c-10 1-16 8-12 15 4 6 11-2 12-15z" fill="url(#wg)" stroke="#8E96A8" stroke-width=".7" opacity=".92"/>
+                </g></g>
+                <rect x="23" y="14" width="2" height="20" rx="1" fill="#0F1F5C"/>
+                <path d="M24 15c-2-5-5-6-6-6M24 15c2-5 5-6 6-6" stroke="#0F1F5C" stroke-width=".8" fill="none"/>
+            </symbol>
+        </defs>
+    </svg>
+    <div id="fx-fly">
+        <div class="fly" style="width:46px;height:46px;animation:flyA 26s linear infinite 0s"><svg><use href="#bfly"/></svg></div>
+        <div class="fly" style="width:34px;height:34px;animation:flyB 31s linear infinite 9s"><svg><use href="#bfly"/></svg></div>
+        <div class="fly" style="width:40px;height:40px;animation:flyC 28s linear infinite 17s"><svg><use href="#bfly"/></svg></div>
+    </div>
+
+    <!-- APERTURA -->
+    <div id="opening-overlay" class="fixed inset-0 z-[100] flex flex-col items-center justify-center transition-opacity duration-1000 overflow-hidden px-4" style="background: radial-gradient(ellipse at 50% 30%, #1E3A9E, var(--azul-profundo) 55%, var(--azul-noche));">
+        <div class="twinkle star-shape" style="top:12%;left:10%;width:22px;height:22px"></div>
+        <div class="twinkle star-shape" style="top:24%;right:12%;width:14px;height:14px;animation-delay:-1s"></div>
+        <div class="twinkle star-shape" style="bottom:22%;left:16%;width:12px;height:12px;animation-delay:-1.8s"></div>
+        <div class="twinkle star-shape" style="bottom:12%;right:20%;width:18px;height:18px;animation-delay:-.5s"></div>
+
+        <div class="invite-head">
+            <p class="font-cursive text-3xl" style="color: #dfe3ec;">Mis XV Años</p>
+            <h2 class="font-cursive silver-text" style="font-size: clamp(4rem, 17vw, 5.5rem);">Melissa</h2>
+            <div class="line-orn mt-1"><i></i><span class="font-name text-sm tracking-[0.25em] text-white">19 DE DICIEMBRE DE 2026</span><i></i></div>
+        </div>
+
+        <div id="envelope-wrapper">
+            <div id="envelope">
+                <div id="flap"></div>
+                <div id="seal"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5Z"/></svg></div>
+            </div>
+        </div>
+        <button onclick="iniciarApertura()" id="btn-abrir" class="mt-10 px-10 py-3 bg-white rounded-full font-bold tracking-[0.2em] text-xs hover:scale-105 transition-all relative z-10" style="color: var(--azul-noche); box-shadow: 0 10px 25px rgba(0,0,0,.3);">ABRIR INVITACIÓN</button>
+    </div>
+
+    <main id="main-content" class="hidden relative">
+
+        <!-- HERO -->
+        <section class="relative h-[95vh] w-full flex items-end justify-center pb-14 overflow-hidden">
+            <img src="assets/1.jpg" alt="Melissa" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0" style="background: linear-gradient(to top, var(--azul-noche), rgba(15,31,92,.5) 45%, transparent);"></div>
+            <div class="relative text-center px-4">
+                <p class="font-cursive text-4xl md:text-5xl text-white">Mis XV Años</p>
+                <h1 class="font-cursive silver-text" style="font-size: clamp(5rem, 22vw, 9rem);">Melissa</h1>
+                <div class="line-orn mt-2"><i></i><span class="font-name text-sm tracking-[0.25em] text-white">19 · 12 · 2026</span><i></i></div>
+            </div>
+        </section>
+
+        <!-- CUENTA ATRÁS -->
+        <section class="py-16 text-center relative overflow-hidden" style="background: linear-gradient(to bottom, var(--azul-noche), var(--azul-profundo));">
+            <div class="twinkle star-shape" style="top:14%;left:12%;width:16px;height:16px"></div>
+            <div class="twinkle star-shape" style="bottom:16%;right:14%;width:12px;height:12px;animation-delay:-1.2s"></div>
+            <p class="font-cursive text-4xl mb-6 text-white">Falta muy poco</p>
+            <div class="flex justify-center gap-3 md:gap-8 px-4 relative z-10">
+                <div class="flex flex-col items-center justify-center rounded-2xl w-20 h-24 md:w-24 md:h-28" style="background: linear-gradient(160deg,#fff,#e6e9f1); border: 2px solid var(--plata);"><span id="days" class="font-name text-3xl md:text-4xl font-bold" style="color: var(--azul-rey);">00</span><span class="text-[10px] tracking-widest mt-1 font-bold" style="color: var(--plata-fuerte);">DÍAS</span></div>
+                <div class="flex flex-col items-center justify-center rounded-2xl w-20 h-24 md:w-24 md:h-28" style="background: linear-gradient(160deg,#fff,#e6e9f1); border: 2px solid var(--plata);"><span id="hours" class="font-name text-3xl md:text-4xl font-bold" style="color: var(--azul-rey);">00</span><span class="text-[10px] tracking-widest mt-1 font-bold" style="color: var(--plata-fuerte);">HRS</span></div>
+                <div class="flex flex-col items-center justify-center rounded-2xl w-20 h-24 md:w-24 md:h-28" style="background: linear-gradient(160deg,#fff,#e6e9f1); border: 2px solid var(--plata);"><span id="minutes" class="font-name text-3xl md:text-4xl font-bold" style="color: var(--azul-rey);">00</span><span class="text-[10px] tracking-widest mt-1 font-bold" style="color: var(--plata-fuerte);">MIN</span></div>
+                <div class="flex flex-col items-center justify-center rounded-2xl w-20 h-24 md:w-24 md:h-28" style="background: linear-gradient(160deg,#fff,#e6e9f1); border: 2px solid var(--plata);"><span id="seconds" class="font-name text-3xl md:text-4xl font-bold" style="color: var(--azul-rey);">00</span><span class="text-[10px] tracking-widest mt-1 font-bold" style="color: var(--plata-fuerte);">SEG</span></div>
+            </div>
+        </section>
+
+        <!-- MENSAJE + FOTO 2 -->
+        <section class="py-20 px-6 text-center relative overflow-hidden" style="background: linear-gradient(to bottom, var(--azul-profundo), var(--hielo) 30%);">
+            <img src="assets/2.jpg" alt="Melissa" class="arch mx-auto w-64 h-80 md:w-72 md:h-96 anim-fade-up">
+            <div class="line-orn mt-12 anim-fade-up"><i></i><svg width="14" height="14" viewBox="0 0 24 24" fill="#8E96A8"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5Z"/></svg><i></i></div>
+            <p class="font-name italic text-xl md:text-2xl max-w-md mx-auto mt-6 leading-relaxed anim-fade-up" style="color: var(--azul-noche);">Hay noches que se convierten en recuerdos para toda la vida. Quiero que la mía la compartas conmigo, entre luces, mariposas y la gente que más quiero.</p>
+            <p class="font-cursive text-4xl mt-6 anim-fade-up" style="color: var(--azul-rey);">¡Te espero!</p>
+        </section>
+
+        <!-- PADRES + FOTO 3 -->
+        <section class="py-20 px-6 text-center relative overflow-hidden" style="background: linear-gradient(to bottom, var(--hielo), white);">
+            <div class="twinkle star-shape" style="top:8%;right:14%;width:18px;height:18px;background:#8E96A8"></div>
+            <div class="twinkle star-shape" style="bottom:10%;left:12%;width:14px;height:14px;background:#8E96A8;animation-delay:-1s"></div>
+            <div class="max-w-2xl mx-auto py-12 relative z-10 anim-fade-up" style="border-top: 2px solid var(--plata); border-bottom: 2px solid var(--plata);">
+                <p class="text-[11px] tracking-[0.3em] font-bold mb-4 opacity-70">CON LA BENDICIÓN DE MI MAMÁ</p>
+                <h3 class="font-cursive text-5xl blue-name">Rosa Isela Hernández</h3>
+                <p class="text-[11px] tracking-[0.3em] font-bold mb-4 mt-10 opacity-70">Y DE MI PADRINO</p>
+                <h3 class="font-cursive text-4xl md:text-5xl blue-name">Pedro Meza Zamarrón</h3>
+            </div>
+            <img src="assets/3.jpg" alt="Melissa" class="arch mx-auto w-64 h-80 mt-14 anim-fade-up">
+        </section>
+
+        <!-- FECHA + CALENDARIO (foto 4) -->
+        <section class="relative py-24 px-6 text-center overflow-hidden" style="background: url('assets/4.jpg') center/cover;">
+            <div class="absolute inset-0" style="background: rgba(10,20,64,.78);"></div>
+            <div class="relative z-10 max-w-sm mx-auto anim-fade-up">
+                <h2 class="font-name text-4xl md:text-5xl font-bold tracking-[0.12em] text-white">19 DE DICIEMBRE</h2>
+                <p class="font-name text-2xl mt-3 tracking-[0.1em] silver-text">2026</p>
+                <div class="bg-white rounded-3xl p-6 mt-8 shadow-2xl" style="border: 2px solid var(--plata);">
+                    <p class="font-name text-xl mb-4" style="color: var(--azul-rey);">Diciembre 2026</p>
+                    <div class="cal" id="calendar"></div>
+                    <a id="add-cal" href="#" target="_blank" class="inline-block mt-6 px-6 py-3 text-white rounded-2xl text-[10px] tracking-widest font-bold" style="background-color: var(--azul-rey);">AGREGAR AL CALENDARIO</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- UBICACIONES -->
+        <section class="py-16 px-4 md:px-8 bg-white">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="rounded-[3rem] overflow-hidden shadow-xl anim-fade-up" style="background-color: var(--hielo); border: 1px solid var(--plata);">
+                    <img src="assets/5.jpg" alt="Iglesia" class="w-full h-56 object-cover select-none pointer-events-none">
+                    <div class="p-8 text-center">
+                        <h2 class="font-name text-3xl mb-3" style="color: var(--azul-noche);">Ceremonia Religiosa</h2>
+                        <p class="font-semibold text-sm tracking-wider mb-2" style="color: var(--azul-rey);">Parroquia San José Obrero</p>
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">6a. Avenida #1401, Col. Miramar<br>Altamira</p>
+                        <iframe class="map mb-5" loading="lazy" title="Mapa iglesia" src="https://www.google.com/maps?q=Parroquia%20San%20Jos%C3%A9%20Obrero%2C%206a%20Avenida%201401%2C%20Miramar%2C%20Altamira&output=embed"></iframe>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Parroquia%20San%20Jos%C3%A9%20Obrero%2C%206a%20Avenida%201401%2C%20Miramar%2C%20Altamira" target="_blank" class="inline-flex items-center justify-center gap-2 px-8 py-4 text-white rounded-2xl text-[10px] tracking-widest font-bold shadow-lg w-full md:w-auto" style="background-color: var(--azul-rey);">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>GOOGLE MAPS
+                        </a>
+                    </div>
+                </div>
+                <div class="rounded-[3rem] overflow-hidden shadow-xl anim-fade-up" style="background-color: var(--hielo); border: 1px solid var(--plata); transition-delay: .2s;">
+                    <img src="assets/6.jpg" alt="Recepción" class="w-full h-56 object-cover select-none pointer-events-none">
+                    <div class="p-8 text-center">
+                        <h2 class="font-name text-3xl mb-1" style="color: var(--azul-noche);">Recepción</h2>
+                        <h3 class="font-bold tracking-widest text-lg mb-3" style="color: var(--azul-rey);">7:00 P.M.</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">Calle 20 de Noviembre #1713, Col. Primavera<br>Altamira</p>
+                        <iframe class="map mb-5" loading="lazy" title="Mapa recepción" src="https://www.google.com/maps?q=Calle%2020%20de%20Noviembre%201713%2C%20Primavera%2C%20Altamira&output=embed"></iframe>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Calle%2020%20de%20Noviembre%201713%2C%20Primavera%2C%20Altamira" target="_blank" class="inline-flex items-center justify-center gap-2 px-8 py-4 text-white rounded-2xl text-[10px] tracking-widest font-bold shadow-lg w-full md:w-auto" style="background-color: var(--azul-rey);">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>GOOGLE MAPS
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOTO 7 -->
+        <section class="photo-band" style="background-image:url('assets/7.jpg'); --fade-top:#fff; --fade-bot:#0A1440;"></section>
+
+        <!-- ITINERARIO + FOTO 9 -->
+        <section class="py-20 px-6 text-center relative overflow-hidden" style="background: linear-gradient(to bottom, var(--azul-noche), var(--azul-profundo));">
+            <div class="twinkle star-shape" style="top:10%;left:14%;width:18px;height:18px"></div>
+            <div class="twinkle star-shape" style="bottom:12%;right:12%;width:14px;height:14px;animation-delay:-1.4s"></div>
+            <img src="assets/9.jpg" alt="Melissa" class="arch mx-auto w-60 h-72 mb-10 anim-fade-up">
+            <h2 class="font-name text-3xl mb-4 text-white anim-fade-up">Itinerario</h2>
+            <p class="font-light max-w-sm mx-auto text-lg anim-fade-up" style="color: var(--plata-clara);">A partir de las 7:00 p.m.</p>
+        </section>
+
+        <!-- FOTO 8 -->
+        <section class="photo-band" style="background-image:url('assets/8.jpg'); --fade-top:#0F1F5C; --fade-bot:#fff;"></section>
+
+        <!-- MESA DE REGALOS -->
+        <section class="py-16 px-8 text-center bg-white anim-fade-up">
+            <svg class="w-12 h-12 mx-auto mb-3" style="color: var(--azul-rey);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M20 12v9H4v-9M2 7h20v5H2zM12 21V7M12 7H7.5a2.5 2.5 0 110-5C11 2 12 7 12 7zm0 0h4.5a2.5 2.5 0 100-5C13 2 12 7 12 7z"/></svg>
+            <h2 class="font-name text-2xl mb-4" style="color: var(--azul-noche);">Mesa de Regalos</h2>
+            <p class="tracking-[0.2em] text-lg font-bold" style="color: var(--azul-rey);">Lluvia de sobres</p>
+        </section>
+
+        <!-- CONFIRMAR (foto 10) -->
+        <section class="relative py-16 px-6 anim-fade-up" id="confirmacion" style="background: url('assets/10.jpg') center/cover;">
+            <div class="absolute inset-0" style="background: rgba(10,20,64,.72);"></div>
+            <div class="relative max-w-md mx-auto bg-white p-10 rounded-[3rem] shadow-xl text-center" style="border: 2px solid var(--plata);">
+                <h2 class="font-name text-2xl mb-6 tracking-widest" style="color: var(--azul-noche);">CONFIRMAR</h2>
+                <input type="text" id="rsvp-nombre" placeholder="Nombre completo" class="w-full p-4 mb-4 rounded-2xl outline-none" style="background-color: var(--hielo); border: 1px solid var(--plata); color: var(--azul-noche);">
+                <select id="rsvp-asistencia" class="w-full p-4 mb-6 rounded-2xl outline-none" style="background-color: var(--hielo); border: 1px solid var(--plata); color: var(--azul-noche);">
+                    <option value="Confirmado">Sí, asistiré</option>
+                    <option value="No asistirá">No podré asistir</option>
+                </select>
+                <button onclick="procesarConfirmacion()" id="btn-rsvp" class="w-full py-4 text-white rounded-2xl font-bold tracking-widest text-[10px]" style="background-color: var(--azul-rey);">ENVIAR Y NOTIFICAR POR WHATSAPP</button>
+            </div>
+        </section>
+
+        <!-- MURO DE DESEOS -->
+        <section class="py-16 px-6 text-center bg-white anim-fade-up">
+            <h2 class="font-name text-3xl mb-8" style="color: var(--azul-noche);">Muro de Deseos</h2>
+            <div class="max-w-2xl mx-auto space-y-4">
+                <textarea id="muro-mensaje" placeholder="Déjale un mensaje lindo a Melissa..." class="w-full h-40 p-8 rounded-3xl outline-none italic resize-none" style="background-color: var(--hielo); border: 1px solid var(--plata); color: var(--azul-noche);"></textarea>
+                <input type="text" id="muro-nombre" placeholder="Tu nombre" class="w-full p-4 rounded-2xl outline-none" style="background-color: var(--hielo); border: 1px solid var(--plata); color: var(--azul-noche);">
+                <button onclick="enviarDeseo()" id="btn-muro" class="px-12 py-4 rounded-full font-bold text-[10px] tracking-widest" style="border: 2px solid var(--azul-rey); color: var(--azul-rey);">PUBLICAR MENSAJE</button>
+            </div>
+        </section>
+
+        <footer class="py-10 text-center text-[9px] tracking-[0.5em]" style="color: var(--plata-fuerte);">INVYTIA PLATINUM EXPERIENCE</footer>
+    </main>
+
+    <script>
+        const audio = document.getElementById('invite-music');
+        const musicText = document.getElementById('music-text');
+        // IMPORTANTE: reemplazar por la URL del Apps Script de esta clienta
+        const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbw9gZsphHUZHtwBwhxZQ-orpPNw5RVu0r_DicgJss3VsCMWQU-KVJ-Z6vlKC4utsCzEsA/exec';
+        const WHATSAPP = '528331095937';
+        const FESTEJADA = 'Melissa';
+        const EVENTO = new Date(2026, 11, 19, 19, 0, 0);
+
+        function iniciarApertura() {
+            document.getElementById('envelope-wrapper').classList.add('open');
+            document.getElementById('btn-abrir').style.display = 'none';
+            audio.play().catch(() => {});
+            document.getElementById('music-control').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('opening-overlay').style.opacity = '0';
+                document.getElementById('main-content').classList.remove('hidden');
+                initObserver();
+                setTimeout(() => {
+                    document.getElementById('opening-overlay').style.display = 'none';
+                    document.getElementById('main-content').classList.add('show-content');
+                    document.body.style.overflowY = 'auto';
+                    document.getElementById('fx-fly').style.display = 'block';
+                    makeDust();
+                    startCountdown();
+                }, 1000);
+            }, 1500);
+        }
+
+        function makeDust() {
+            for (let i = 0; i < 20; i++) {
+                const s = document.createElement('div');
+                const size = 5 + Math.random() * 9;
+                s.className = 'dust star-shape';
+                s.style.cssText = `left:${Math.random() * 100}vw;width:${size}px;height:${size}px;animation-duration:${9 + Math.random() * 10}s;animation-delay:${-Math.random() * 14}s`;
+                document.body.appendChild(s);
+            }
+        }
+
+        function initObserver() {
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.anim-fade-up').forEach(el => observer.observe(el));
+        }
+
+        function buildCalendar() {
+            const cal = document.getElementById('calendar');
+            ['D','L','M','M','J','V','S'].forEach(d => cal.insertAdjacentHTML('beforeend', `<div class="dow">${d}</div>`));
+            const first = new Date(2026, 11, 1).getDay();
+            const total = new Date(2026, 12, 0).getDate();
+            for (let i = 0; i < first; i++) cal.insertAdjacentHTML('beforeend', '<div></div>');
+            for (let d = 1; d <= total; d++) cal.insertAdjacentHTML('beforeend', `<div class="day ${d === 19 ? 'mark' : ''}">${d}</div>`);
+            document.getElementById('add-cal').href = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent('XV Años de ' + FESTEJADA) + '&dates=20261219T190000/20261220T020000&ctz=America/Mexico_City&location=' + encodeURIComponent('Calle 20 de Noviembre 1713, Primavera, Altamira');
+        }
+        buildCalendar();
+
+        async function procesarConfirmacion() {
+            const nombre = document.getElementById('rsvp-nombre').value;
+            const asistencia = document.getElementById('rsvp-asistencia').value;
+            const btn = document.getElementById('btn-rsvp');
+            if (!nombre) return alert("Por favor escribe tu nombre");
+            btn.innerText = "REGISTRANDO...";
+            try {
+                await fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ tipo: 'confirmacion', nombre, asistencia }) });
+                const msg = `¡Hola! Confirmo mi asistencia a los XV de ${FESTEJADA}: ${nombre}. Estado: ${asistencia}`;
+                window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+                btn.innerText = "¡REGISTRADO!";
+            } catch (e) { alert("Error al conectar"); btn.innerText = "REINTENTAR"; }
+        }
+
+        async function enviarDeseo() {
+            const mensaje = document.getElementById('muro-mensaje').value;
+            const nombre = document.getElementById('muro-nombre').value;
+            const btn = document.getElementById('btn-muro');
+            if (!mensaje || !nombre) return alert("Llena ambos campos");
+            btn.innerText = "PUBLICANDO...";
+            try {
+                await fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ tipo: 'deseo', mensaje, nombre }) });
+                alert("¡Mensaje publicado con éxito!");
+                document.getElementById('muro-mensaje').value = "";
+                document.getElementById('muro-nombre').value = "";
+                btn.innerText = "PUBLICAR MENSAJE";
+            } catch (e) { alert("Error"); btn.innerText = "PUBLICAR MENSAJE"; }
+        }
+
+        function startCountdown() {
+            const tick = () => {
+                const dist = EVENTO.getTime() - Date.now();
+                if (dist > 0) {
+                    document.getElementById("days").innerText = Math.floor(dist / 864e5);
+                    document.getElementById("hours").innerText = Math.floor((dist % 864e5) / 36e5);
+                    document.getElementById("minutes").innerText = Math.floor((dist % 36e5) / 6e4);
+                    document.getElementById("seconds").innerText = Math.floor((dist % 6e4) / 1e3);
+                }
+            };
+            tick(); setInterval(tick, 1000);
+        }
+
+        function toggleMusic() {
+            if (audio.paused) { audio.play(); musicText.innerText = "PAUSAR"; }
+            else { audio.pause(); musicText.innerText = "REANUDAR"; }
+        }
+    </script>
+</body>
+</html>
